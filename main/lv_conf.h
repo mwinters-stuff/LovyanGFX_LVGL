@@ -85,11 +85,19 @@
 
 /*Use a custom tick source that tells the elapsed time in milliseconds.
  *It removes the need to manually update the tick with `lv_tick_inc()`)*/
+/* 1. Enable the custom tick source */
 #define LV_TICK_CUSTOM 1
+
 #if LV_TICK_CUSTOM
-    #define LV_TICK_CUSTOM_INCLUDE "Arduino.h"         /*Header for the system time function*/
-    #define LV_TICK_CUSTOM_SYS_TIME_EXPR (millis())    /*Expression evaluating to current system time in ms*/
-#endif   /*LV_TICK_CUSTOM*/
+
+  /* 2. Include the required header */
+  #define LV_TICK_CUSTOM_INCLUDE "esp_timer.h"
+
+  /* 3. Define the expression to get the system time in milliseconds */
+  /* esp_timer_get_time() returns time in microseconds, so we divide by 1000 */
+  #define LV_TICK_CUSTOM_SYS_TIME_EXPR (esp_timer_get_time() / 1000)
+
+#endif /* LV_TICK_CUSTOM */
 
 /*Default Dot Per Inch. Used to initialize default sizes such as widgets sized, style paddings.
  *(Not so important, you can adjust it to modify default sizes and spaces)*/
